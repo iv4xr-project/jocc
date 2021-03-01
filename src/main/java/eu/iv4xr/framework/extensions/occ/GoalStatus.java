@@ -1,9 +1,9 @@
 package eu.iv4xr.framework.extensions.occ;
 
 /**
- * Runtime status of a goal.
+ * Runtime status of a goal, see {@link eu.iv4xr.framework.extensions.occ.Goal}.
  */
-public class GoalStatus {
+public class GoalStatus implements Cloneable {
 	
 	public Goal goal ;
 	
@@ -30,5 +30,18 @@ public class GoalStatus {
 				 + ", achieved="+ isAchieved
 				 + ", fail=" + isFailed; 
 	 }
+    
+    /**
+     * Making a deep clone of this object.
+     */
+    @Override
+    public Object clone() {
+    	GoalStatus st = new GoalStatus() ;
+    	st.goal = this.goal ;
+    	st.likelihood = this.likelihood ;
+    	st.isAchieved = this.isAchieved ;
+    	st.isFailed = this.isFailed ;
+    	return st ;
+    }
 
 }

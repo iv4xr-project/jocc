@@ -2,10 +2,13 @@ package eu.iv4xr.framework.extensions.occ;
 
 /**
  * 
- * Representing a goal. The name is assumed to be unique. Furthermore, a goal
+ * Representing a goal that is considered to be emotionally relevant
+ * for some emotion-aware agent. For example, if the agent simulates
+ * a human bus driver, a goal could be "reaching the end station on time". 
+ * 
+ * The name of a goal is assumed to be unique. Furthermore, a goal
  * is assumed to be unique in the sense that we should not have two instances
- * of the same goal, existing at the same time in the state of an emotion agent.
- *
+ * of the same goal, existing at the same time in the state of an agent.
  */
 public class Goal {
 		

@@ -1,5 +1,6 @@
 package eu.iv4xr.framework.extensions.occ;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -8,12 +9,12 @@ import java.util.function.Function;
 public class Event {
 	
 	public String name ;
-	public Function<BeliefBase,BeliefBase> effect ;
+	public Consumer<BeliefBase> effect ;
 	
 	public Event() { }
 	public Event(String name) { this.name = name ; }
 	
-	public Event WithEffect(Function<BeliefBase,BeliefBase> e)
+	public Event WithEffect(Consumer<BeliefBase> e)
     {
         this.effect = e;
         return this;
@@ -26,7 +27,7 @@ public class Event {
 		
 		public Tick() {
 			name = "tick" ;
-			effect = bbs -> bbs ; // a tick event does not change the beliefbase...
+			effect = bbs -> { } ; // a tick event does not change the beliefbase...
 		}
 	}
 

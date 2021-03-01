@@ -2,7 +2,12 @@ package eu.iv4xr.framework.extensions.occ;
 
 import java.util.function.Function;
 
-import eu.iv4xr.framework.extensions.occ.BeliefBase.GoalStatuses;
+import eu.iv4xr.framework.extensions.occ.BeliefBase.Goals_Status;
+
+/**
+ * Provides some classes representing different kind of rules for configuring how emotions
+ * are calculated.
+ */
 
 public class Rules {
 	
@@ -13,13 +18,13 @@ public class Rules {
 	 * the belief.
 	 */
 	public static class AppraisalRule {
-		Function<GoalStatuses, Function<String, Function<String,Integer>>> rule ;
+		Function<Goals_Status, Function<String, Function<String,Integer>>> rule ;
 		
-		public AppraisalRule(Function<GoalStatuses, Function<String, Function<String,Integer>>> rule) {
+		public AppraisalRule(Function<Goals_Status, Function<String, Function<String,Integer>>> rule) {
 			this.rule = rule ;
 		}
 		
-		int apply(GoalStatuses goalsStatus, String eventName, String targetName) {
+		int apply(Goals_Status goalsStatus, String eventName, String targetName) {
 			return rule.apply(goalsStatus).apply(eventName).apply(targetName) ;
 		}
 	}
@@ -37,11 +42,11 @@ public class Rules {
 	 * This should be an int >= 1. Emotion with decay-factor 2 will decay, roughly, 
 	 * twice as fast.
 	 */
-	public static class EmptionIntensityDecayRule {
+	public static class EmotionIntensityDecayRule {
 		
 		Function<Emotion.EmotionType,Integer> rule ;
 		
-		public EmptionIntensityDecayRule(Function<Emotion.EmotionType,Integer> rule) {
+		public EmotionIntensityDecayRule(Function<Emotion.EmotionType,Integer> rule) {
 			this.rule = rule ;
 		}	
 	}
@@ -54,6 +59,24 @@ public class Rules {
 			this.rule = rule ;
 		}
 	}
+	
+	
+	/**
+	 * Representing a rule (actually, a combined set of rules) describing how the likelihood of
+	 * a given goal affects the likelihood of another goal (consequence-goal). When applied, 
+	 * the rule returns the new estimated/believed likelihood of the consequence goal. Null is 
+	 * returned if the causing-goal is considered as irrelevant for the consequent-goal.
+	 */
+	public static class GoalTowardsGoalLikelihoodRule {
+		
+		Function<BeliefBase, Function<String, Function<String,Integer>>> rule ;
+		
+		public GoalTowardsGoalLikelihoodRule(Function<BeliefBase, Function<String, Function<String,Integer>>> rule) {
+			this.rule = rule ;
+		}		
+	}
+	
+	
 	
 
 }

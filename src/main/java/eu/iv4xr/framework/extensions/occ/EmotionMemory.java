@@ -3,24 +3,16 @@ package eu.iv4xr.framework.extensions.occ;
 import java.util.*;
 
 public class EmotionMemory {
-	
-	public static class SingleEmotionMemory {
-		Emotion emotion ;
-		int timeStamp ;
-	}
-	
-	List<SingleEmotionMemory> memory = new LinkedList<>() ;
+		
+	List<Emotion> memory = new LinkedList<>() ;
 	
 	public static int memoryHorizon = 1000 ;
 	
 	/**
-	 * Add this emotion e to the memory, with the given time-stamp.
+	 * Add this emotion e to the memory.
 	 */
-	public void register(Emotion e, int currentTime) {
-		SingleEmotionMemory mem = new SingleEmotionMemory() ;
-		mem.emotion = e.shallowClone() ;
-		mem.timeStamp = currentTime ;
-		memory.add(mem) ;
+	public void register(Emotion e) {
+		memory.add(e) ;
 	}
 	
 	/**
@@ -28,14 +20,14 @@ public class EmotionMemory {
 	 */
 	public void cleanup(int currentTime) {
 		int oldestAllowed = Math.max(0,currentTime - 1000) ;
-		memory.removeIf(mem -> mem.timeStamp < oldestAllowed) ;
+		memory.removeIf(e -> e.t0 < oldestAllowed) ;
 	}
 	
 	/**
 	 * Check the memory registered an emotion of the given type, towards the given goal.
 	 */
 	public boolean contains(Emotion.EmotionType etype, String goal) {
-		return memory.stream().anyMatch(mem -> mem.emotion.etype == etype && mem.emotion.g.name.equals(goal)) ;
+		return memory.stream().anyMatch(e -> e.etype == etype && e.g.name.equals(goal)) ;
 	}
 
 }

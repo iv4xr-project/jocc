@@ -2,7 +2,7 @@ package eu.iv4xr.framework.extensions.occ;
 
 import java.util.*;
 
-import eu.iv4xr.framework.extensions.occ.BeliefBase.GoalStatuses;
+import eu.iv4xr.framework.extensions.occ.BeliefBase.Goals_Status;
 import eu.iv4xr.framework.extensions.occ.Emotion.EmotionType;
 import eu.iv4xr.framework.extensions.occ.Rules.*;
 
@@ -11,8 +11,8 @@ public class EmotionRelatedFunctions {
 	public static int EmotionFunction(EmotionType ety,
 			AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusBefore,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter,
             Event e,
             String targetName,
             Set<Emotion> emotionset,
@@ -35,7 +35,7 @@ public class EmotionRelatedFunctions {
 
         public static int joy(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusAfter,
             Event e,
             Goal g)
         {
@@ -49,7 +49,7 @@ public class EmotionRelatedFunctions {
 
         public static int distress(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusAfter,
             Event e,
             Goal g)
         {
@@ -65,8 +65,8 @@ public class EmotionRelatedFunctions {
 
         public static int hope(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusBefore,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter,
             Goal g
             )
         {
@@ -84,8 +84,8 @@ public class EmotionRelatedFunctions {
 
         public static int fear(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusBefore,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter,
             Goal g
             )
         {
@@ -103,8 +103,8 @@ public class EmotionRelatedFunctions {
 
         public static int satisfaction(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusBefore,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter,
             Goal g,
             Set<Emotion> emotionset,
             EmotionMemory ememory
@@ -131,8 +131,8 @@ public class EmotionRelatedFunctions {
 
         public static int disappointment(AppraisalRules appr,
             EmotionIntensityThresholdRule threshold,
-            GoalStatuses goalsStatusBefore,
-            GoalStatuses goalsStatusAfter,
+            Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter,
             Goal g,
             Set<Emotion> emotionset,
             EmotionMemory ememory
@@ -159,7 +159,7 @@ public class EmotionRelatedFunctions {
          * a given target, when this emotion is triggered for the first time. The trigger 
          * is an event.
          */ 
-        public static int intensity(EmotionType ety, AppraisalRules appraisal, EmotionIntensityThresholdRule threshold, GoalStatuses goalsStatus, Event e, String targetName)
+        public static int intensity(EmotionType ety, AppraisalRules appraisal, EmotionIntensityThresholdRule threshold, Goals_Status goalsStatus, Event e, String targetName)
         {
             return potential(ety, appraisal, goalsStatus, e , targetName) - threshold.rule.apply(ety) ;
         }
@@ -169,7 +169,7 @@ public class EmotionRelatedFunctions {
          * a given goal, when it is triggered by an event. This is used inside the 
          * intensity-function.
          */ 
-        public static int potential(EmotionType ety, AppraisalRules appraisal, GoalStatuses goalsStatus,  Event e, String targetName)
+        public static int potential(EmotionType ety, AppraisalRules appraisal, Goals_Status goalsStatus,  Event e, String targetName)
         {
         	Goal g ;
             switch(ety)
@@ -195,7 +195,7 @@ public class EmotionRelatedFunctions {
         /**
          * The ifun_time function. 
          */ 
-        public static int decayedIntesity(EmptionIntensityDecayRule decayrule, EmotionType ety, int initialIntensity, int t0, int newtime)
+        public static int decayedIntesity(EmotionIntensityDecayRule decayrule, EmotionType ety, int initialIntensity, int t0, int newtime)
         {
 
         	assert newtime >= t0 ;
