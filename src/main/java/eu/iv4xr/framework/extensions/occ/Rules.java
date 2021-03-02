@@ -35,6 +35,11 @@ public class Rules {
 	        public AppraisalRule desirabilityTowardsOther;
 	        public AppraisalRule liking;
 	        public AppraisalRules(){ }
+	        
+	        public AppraisalRules withDesirabilityRule(AppraisalRule rule) {
+	        	desirability = rule ;
+	        	return this ;
+	        }
 	}
 	
 	/**

@@ -27,11 +27,11 @@ public interface BeliefBase {
 		
 		public HashMap<String,GoalStatus> statuses =  new HashMap<>() ;
 		
-		Goal getGoal(String goalName) {
+		public Goal getGoal(String goalName) {
 			return statuses.get(goalName).goal ;
 		}
 		
-		GoalStatus goalStatus(String goalName) {
+		public GoalStatus goalStatus(String goalName) {
 			return statuses.get(goalName) ;
 		}
 		

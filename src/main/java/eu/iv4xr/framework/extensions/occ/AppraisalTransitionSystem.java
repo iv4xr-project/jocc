@@ -113,7 +113,7 @@ public class AppraisalTransitionSystem {
         currentTime = newtime;
         
         // Updating the beliefbase, after this update the current beliefbase is K_plus:
-        e.effect.accept(beliefbase);
+        e.applyEffectOnBeliefBase(beliefbase);
         
         // applying R* to apply chain-updates to goals-likelihood:
         applyGoalTowardsGoalRule() ;

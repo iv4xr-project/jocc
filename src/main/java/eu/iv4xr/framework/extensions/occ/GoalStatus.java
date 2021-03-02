@@ -24,6 +24,18 @@ public class GoalStatus implements Cloneable {
     
     public String goalName() { return goal.name ; }
     
+    public void setAsFailed() {
+    	isAchieved = false ;
+    	isFailed = true ;
+    	likelihood = 0 ;
+    }
+    
+    public void setAsAchieved() {
+    	isAchieved = true ;
+    	isFailed = false ;
+    	likelihood = 100 ;
+    }
+    
     @Override
     public String toString() {
 		 return goal.toString() + ", p=" + likelihood 
