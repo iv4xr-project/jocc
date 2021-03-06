@@ -4,23 +4,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import eu.iv4xr.framework.extensions.occ.BeliefBase.Goals_Status;
-import eu.iv4xr.framework.extensions.occ.Rules.* ;
+import eu.iv4xr.framework.extensions.occ.Emotion.EmotionType;
+
 import static eu.iv4xr.framework.extensions.occ.EmotionRelatedFunctions.* ;
 
-public class AppraisalTransitionSystem {
+public class EmotionAppraisalSystem {
 	
 	/**
 	 * The name of the agent to which this appraisal system is attached to.
 	 */
 	String agentName ;
 	
-	// Various rules :
-
-    public AppraisalRules appraisal;
-    public EmotionIntensityDecayRule decayrule;
-    public EmotionIntensityThresholdRule intensityThresholdRule;
-    public GoalTowardsGoalLikelihoodRule goalTowardsGoalRule;
-    
+	/**
+	 * A model of a user (or a type of users) in terms of e.g. how they generally appraise
+	 * events towards their goals (e.g. is an event desirable, or undesirable). 
+	 */
+	public UserCharacterization userModel ;
 
     // State-components:
     public BeliefBase beliefbase ;
@@ -34,9 +33,14 @@ public class AppraisalTransitionSystem {
     
     //private bool found = false;
     
-    public AppraisalTransitionSystem(String agentName)
+    public EmotionAppraisalSystem(String agentName)
     {
         this.agentName = agentName ;
+    }
+    
+    public EmotionAppraisalSystem withUserModel(UserCharacterization userModel) {
+    	this.userModel = userModel ;
+    	return this ;
     }
     
     public void addGoal(Goal g,int likelihood){
@@ -44,6 +48,13 @@ public class AppraisalTransitionSystem {
     	status.goal = g ;
     	status.likelihood = likelihood ;
         beliefbase.getGoalsStatus().statuses.put(g.name,status) ; 
+    }
+    
+    public Emotion getEmotion(String goalName, Emotion.EmotionType ety) {
+    	for(Emotion e : emo) {
+    		if(e.g.name.equals(goalName) && e.etype == ety) return e ;
+    	}
+    	return null ;
     }
     
     /**
@@ -67,7 +78,7 @@ public class AppraisalTransitionSystem {
                     // consider the goal-pair (cause,consequent). Invoke the goal2goal-rule to see if
                     // the new likelihood of the cause-goal (if it changes at all) would influence
                     // the agent's belief on the likelihood of the consequence-goal:
-                    Integer newLikelihood = goalTowardsGoalRule.rule
+                    Integer newLikelihood = userModel.goalTowardsGoalRule
                     		                .apply(beliefbase)
                     		                .apply(cause.goal.name)
                     		                .apply(consequent.goal.name);                    
@@ -93,7 +104,7 @@ public class AppraisalTransitionSystem {
     {
         for(Emotion e : emo) {
             // use the decay-intensity-function to obtain the new intensity:
-        	e.intensity = decayedIntesity(decayrule, e.etype, e.intensity0, e.t0, newtime);
+        	e.intensity = decayedIntesity(userModel, e.etype, e.intensity0, e.t0, newtime);
         }
         // remove those whose intensity drops to 0:
     }
@@ -113,10 +124,10 @@ public class AppraisalTransitionSystem {
         currentTime = newtime;
         
         // Updating the beliefbase, after this update the current beliefbase is K_plus:
-        e.applyEffectOnBeliefBase(beliefbase);
+        userModel.eventEffect(e, beliefbase);
         
         // applying R* to apply chain-updates to goals-likelihood:
-        applyGoalTowardsGoalRule() ;
+        //applyGoalTowardsGoalRule() ;
 
         List<Goal> goals = beliefbase.getGoalsStatus().statuses.values().stream()
         		           . map(status -> status.goal)
@@ -131,9 +142,8 @@ public class AppraisalTransitionSystem {
         	for(var etype : Emotion.emotionTypes) {
              
                 // calculate the intensity:
-                int w = EmotionFunction(etype, 
-                		      appraisal, 
-                		      intensityThresholdRule, 
+                int w = EmotionFunction(userModel,
+                		      etype, 
                 		      goalsStatusBeforeUpdate, 
                 		      goalsCurrentStatus, 
                 		      e, 
@@ -161,6 +171,9 @@ public class AppraisalTransitionSystem {
         Set<Emotion> retainedOldEmotion = new HashSet<>();
         for(Emotion emoOld : emo)
         {
+        	// drop if the intensity becomes 0
+        	if (emoOld.intensity <=0) continue ;
+        	
             // drop if the emotion occurs in the newEmotions:
             if (newEmotions.stream().anyMatch(emoNew -> emoNew.etype == emoOld.etype 
             		&& emoNew.g.name.equals(emoOld.g.name)))
@@ -212,8 +225,8 @@ public class AppraisalTransitionSystem {
         }
         
         System.out.println("** Update: " + e.name + ",time=" + currentTime);
-        System.out.println("** Belief-base:");
-        System.out.println(beliefbase);
+        System.out.println("** Goals:");
+        System.out.println(beliefbase.getGoalsStatus().toString());
         System.out.println(("** Emotion state:"));
         int k = 0;
         for(Emotion emotion : emo)

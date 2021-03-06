@@ -37,7 +37,10 @@ public interface BeliefBase {
 		
 		public Object clone() {
 			Goals_Status gsts = new Goals_Status() ;
-			gsts.statuses = (HashMap<String,GoalStatus>) this.statuses.clone() ;
+			for(var st : this.statuses.entrySet()) {
+				gsts.statuses.put(st.getKey(), (GoalStatus) st.getValue().clone()) ;
+			}
+			//gsts.statuses = (HashMap<String,GoalStatus>) this.statuses.clone() ;
 			return gsts ;
 		}
 		
@@ -61,8 +64,14 @@ public interface BeliefBase {
 			return true ;
 		}
 		
+		public String toString() {
+			String r = "" ;
+			for(GoalStatus gs : statuses.values()) r += "    " + gs.toString() + "\n" ;
+			return r ;
+		}
+		
 	}
 	
 	public Goals_Status getGoalsStatus() ;
-	
+
 }
