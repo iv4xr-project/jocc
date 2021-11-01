@@ -1,9 +1,16 @@
 package eu.iv4xr.framework.extensions.occ;
 
 import java.util.*;
-
+/**
+ * @author sansari
+ */
 import eu.iv4xr.framework.extensions.occ.BeliefBase.Goals_Status;
 import eu.iv4xr.framework.extensions.occ.Emotion.EmotionType;
+
+/**
+ * @author sansari
+ * @author wprasetya
+ */
 
 public class EmotionRelatedFunctions {
 
@@ -175,6 +182,7 @@ public class EmotionRelatedFunctions {
     public static int decayedIntesity(UserCharacterization userModel, EmotionType ety, int initialIntensity, int t0,
             int newtime) {
 
+    	
         assert newtime >= t0;
         if (newtime == t0)
             return initialIntensity;

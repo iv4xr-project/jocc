@@ -12,10 +12,11 @@ public class EmotionAppraisalSystem {
 
     /**
      * The name of the agent to which this appraisal system is attached to.
+     * @author sansari
      */
     String agentName;
 
-    /**
+    /** 
      * A model of a user (or a type of users) in terms of e.g. how they generally
      * appraise events towards their goals (e.g. is an event desirable, or
      * undesirable).
@@ -25,6 +26,8 @@ public class EmotionAppraisalSystem {
     // State-components:
     public BeliefBase beliefbase;
     public Set<Emotion> emo = new HashSet<>();
+    
+    public HashSet<Emotion> newEmotions;
 
     // memory ... emotion e will be added when it emerges. Its t0 and w0 already
     // contains the
@@ -108,7 +111,15 @@ public class EmotionAppraisalSystem {
     private void applyTimeDecayToEmotions(int newtime) {
         for (Emotion e : emo) {
             // use the decay-intensity-function to obtain the new intensity:
+        	if(e.etype==EmotionType.Fear &&newtime>=120&e.g.name=="quest is completed")
+        	{
+        		System.out.print("last intensity:"+ e.intensity);
+        	} 
             e.intensity = decayedIntesity(userModel, e.etype, e.intensity0, e.t0, newtime);
+            if(e.etype==EmotionType.Fear &&newtime>=120&e.g.name=="quest is completed")
+        	{
+        		System.out.print("new intensity:"+ e.intensity);
+        	} 
         }
         // remove those whose intensity drops to 0:
     }
@@ -159,7 +170,7 @@ public class EmotionAppraisalSystem {
 
         // first calculate new emotions that would emerge:
 
-        HashSet<Emotion> newEmotions = new HashSet<Emotion>();
+        newEmotions = new HashSet<Emotion>();
         Goals_Status goalsCurrentStatus = beliefbase.getGoalsStatus();
         for (Goal g : goals) {
 
@@ -175,9 +186,11 @@ public class EmotionAppraisalSystem {
                     // we add emerging emotion to the memory:
                     ememory.register(em);
                 }
-            }
+            }       
         }
-
+        
+        //store newly activated emotions with the corresponding event
+        
         // now we apply time-decay to old emotions:
         applyTimeDecayToEmotions(currentTime);
 
@@ -198,7 +211,7 @@ public class EmotionAppraisalSystem {
 
                 // NOTE: we can alternatively drop only drop old emotions whose intensity is
                 // lower or equal to new emotion
-
+            	
                 continue;
             // drop if a conflicting emotion occurs in the newEmotion:
             if (newEmotions.stream().anyMatch(
@@ -223,8 +236,17 @@ public class EmotionAppraisalSystem {
                 continue;
             Emotion emoOld = results.get(0);
             emotion.intensity = Math.max(emotion.intensity, emoOld.intensity);
-            // what about if the decayed intenstiy is higher than the new one?
+            if(emotion.intensity==emoOld.intensity)
+            {
+                emotion.intensity0= emoOld.intensity0;
+                emotion.t0=emoOld.t0;
 
+            }
+            if(emotion.etype==EmotionType.Fear &&emotion.intensity==emoOld.intensity&&emotion.g.name=="quest is completed")
+        	{
+        		System.out.print("Old entinisty was higher!!!!!: "+ emotion.intensity);
+        	} 
+            // what about if the decayed intenstiy is higher than the new one?
         }
 
         // merging:
@@ -256,6 +278,10 @@ public class EmotionAppraisalSystem {
             if (k > 0)
                 System.out.println("");
             System.out.println("   " + emotion);
+            if(emotion.etype==EmotionType.Fear&&newtime>100)
+            {
+            	System.out.print("here we have a fear");
+            } 
         }
     }
 

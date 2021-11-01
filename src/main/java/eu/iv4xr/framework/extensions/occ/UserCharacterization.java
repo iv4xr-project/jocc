@@ -3,7 +3,7 @@ package eu.iv4xr.framework.extensions.occ;
 import java.util.function.Function;
 import eu.iv4xr.framework.extensions.occ.BeliefBase.Goals_Status;
 
-/**
+/*** @author sansari
  * This class models a user, or a type of users, in terms of how they appraise
  * incoming events towards e.g. goals that matter for them.
  */

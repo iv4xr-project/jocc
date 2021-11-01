@@ -2,7 +2,7 @@ package eu.iv4xr.framework.extensions.occ;
 
 import java.util.*;
 
-/**
+/*** @author sansari
  * Representing the belief-base (state) of an emotion-aware agent. We will
  * represent this generically as an interface; the key-part of this belief
  * structure is that it is assumed to keep track of the status of different

@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Representing a single instance of the state of some emotion type.
+ * @author sansari
  */
 public class Emotion {
 

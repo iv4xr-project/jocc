@@ -10,6 +10,7 @@ public class EmotionMemory {
 
     /**
      * Add this emotion e to the memory.
+     * @author sansari
      */
     public void register(Emotion e) {
         memory.add(e);

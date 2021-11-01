@@ -1,5 +1,7 @@
 package eu.iv4xr.framework.extensions.occ;
 
+import java.util.function.Function;
+
 /**
  * 
  * Representing a goal that is considered to be emotionally relevant for some
@@ -14,7 +16,6 @@ public class Goal {
 
     public String name;
     public int significance;
-
     public Goal() {
     }
 
