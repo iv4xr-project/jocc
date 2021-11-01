@@ -4,14 +4,16 @@ This is an implementation of an appraisal transition system for event-driven emo
 
 The formal theory behind this implementation is presented in this paper:
 
-__An Appraisal Transition System for Event drivenEmotions in Agent-based Player Experience Testing__,
+[__An Appraisal Transition System for Event drivenEmotions in Agent-based Player Experience Testing__](https://arxiv.org/abs/2105.05589),
    Saba Gholizadeh Ansari,
    I. S. W. B.Prasetya,
    Mehdi Dastani,
    Frank Dignum,
-   Gabriele Keller. Utrecht University. Draft.
-   
- 
+   Gabriele Keller. Utrecht University.
+   Presented in the 9th International Workshop on Engineering Multi-Agent Systems (EMAS), 2021.
+
+
+
 ## License
 
 Copyright (c) 2021, Utrecht University.
