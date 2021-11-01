@@ -1,1 +1,7 @@
+**/.DS_Store
+/gym
 /target/
+.project
+.classpath
+.settings/
+
