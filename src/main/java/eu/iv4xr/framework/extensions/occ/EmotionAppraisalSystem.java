@@ -278,10 +278,7 @@ public class EmotionAppraisalSystem {
             if (k > 0)
                 System.out.println("");
             System.out.println("   " + emotion);
-            if(emotion.etype==EmotionType.Fear&&newtime>100)
-            {
-            	System.out.print("here we have a fear");
-            } 
+ 
         }
     }
 

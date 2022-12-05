@@ -51,7 +51,7 @@ public class EmotionRelatedFunctions {
                 // this is from C#, seems to be a mistake. Should be 0:
                 // && goalsStatusAfter.goalStatus(g.name).likelihood ==
                 // GoalStatus.maxLikelihood)
-                && goalsStatusAfter.goalStatus(g.name).likelihood == 0)
+                && goalsStatusAfter.goalStatus(g.name).likelihood == 0 )
 
             return intensity(userModel, EmotionType.Distress, goalsStatusAfter, e, g.name);
 
@@ -66,7 +66,7 @@ public class EmotionRelatedFunctions {
         var p_after = gStatusAfter.likelihood;
         // System.out.println("%%%%% checking HOPE, pold=" + p_before + ", pnew=" +
         // p_after) ;
-        if (p_after > p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved) {
+        if (p_after > p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved&& p_after!=1) {
 
             var isy = intensity(userModel, EmotionType.Hope, goalsStatusAfter, null, g.name);
             // System.out.println("%%%%% checking HOPE " + isy) ;
@@ -82,7 +82,7 @@ public class EmotionRelatedFunctions {
         var p_before = goalsStatusBefore.goalStatus(g.name).likelihood;
         var gStatusAfter = goalsStatusAfter.goalStatus(g.name);
         var p_after = gStatusAfter.likelihood;
-        if (p_after < p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved)
+        if (p_after < p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved &&p_after!=0)
 
             return intensity(userModel, EmotionType.Fear, goalsStatusAfter, null, g.name);
 
@@ -122,12 +122,11 @@ public class EmotionRelatedFunctions {
 
         if (emotionset.stream()
                 .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
-                && ememory.contains(EmotionType.Hope, g.name) && goalsStatusAfter.goalStatus(g.name).isFailed)
-
-            return intensity(userModel, EmotionType.Disappointment, goalsStatusAfter, null, g.name);
-
+                && ememory.contains(EmotionType.Hope, g.name) && goalsStatusAfter.goalStatus(g.name).isFailed)    
+            return intensity(userModel, EmotionType.Disappointment, goalsStatusAfter, null, g.name);        
         else
-            return 0;
+        	return 0;
+        
     }
 
     /**
@@ -165,13 +164,13 @@ public class EmotionRelatedFunctions {
             // likelihood would then be 1
             // return g.significance;
             // HAck:
-            return 80 * g.significance;
+            return 100 * g.significance;
         case Disappointment:
             g = goalsStatus.getGoal(targetName);
             // return (GoalStatus.maxLikelihood -
             // goalsStatus.goalStatus(targetName).likelihood) * g.significance; likelihood
             // would be 0
-            return g.significance;
+            return 100 *g.significance;
         }
         throw new IllegalArgumentException(); // should not reach this point
     }
