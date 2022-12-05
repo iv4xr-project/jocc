@@ -12,7 +12,7 @@ The formal theory behind this implementation is presented in this paper:
    Gabriele Keller. Utrecht University.
    Presented in the 9th International Workshop on Engineering Multi-Agent Systems (EMAS), 2021.
 
-For detail explanation of JOCC with architecture and examples, please check [here](https://github.com/iv4xr-project/jocc/wiki)
+For detail explanation of JOCC with the architecture and examples, please check [Wiki](https://github.com/iv4xr-project/jocc/wiki)
 
 ## License
 
