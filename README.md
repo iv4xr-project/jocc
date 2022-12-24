@@ -4,7 +4,7 @@ This is an implementation of an appraisal transition system for event-driven emo
 
 The formal theory behind this implementation is presented in this paper:
 
-[__An Appraisal Transition System for Event drivenEmotions in Agent-based Player Experience Testing__](https://arxiv.org/abs/2105.05589),
+[__An Appraisal Transition System for Event drivenEmotions in Agent-based Player Experience Testing__](https://link.springer.com/chapter/10.1007/978-3-030-97457-2_9),
    Saba Gholizadeh Ansari,
    I. S. W. B.Prasetya,
    Mehdi Dastani,
@@ -12,7 +12,7 @@ The formal theory behind this implementation is presented in this paper:
    Gabriele Keller. Utrecht University.
    Presented in the 9th International Workshop on Engineering Multi-Agent Systems (EMAS), 2021.
 
-
+For detail explanation of JOCC with the architecture and examples, please check [Wiki](https://github.com/iv4xr-project/jocc/wiki)
 
 ## License
 
