@@ -35,7 +35,7 @@ public class EmotionAppraisalSystem {
     // intensity.
     public EmotionMemory ememory = new EmotionMemory();
     
-    public int currentTime = 0;
+    public long currentTime = 0;
 
     // private bool found = false;
 
@@ -54,16 +54,16 @@ public class EmotionAppraisalSystem {
     }
     
     /**
-     * Set how long moments of stimulated emotions will stay in the memory. The number k is 
-     * expressed in terms of how many emotion-stimulations will be kept in memory (so, it 
-     * is NOT expressed in seconds!). The default is 1000. 
+     * Set how long moments of stimulated emotions will stay in the memory. The number k is expressed
+     * in time-unit that is assumed to be used by the appraisal system (e.g. second, or milli-second).
+     * The default is 1000 units.
      */
-    public EmotionAppraisalSystem setEmotionMemoryHorizon(int k) {
+    public EmotionAppraisalSystem setEmotionMemoryHorizon(long k) {
     	ememory.memoryHorizon = k ;
     	return this ;
     }
 
-    public EmotionAppraisalSystem addGoal(Goal g, int likelihood) {
+    public EmotionAppraisalSystem addGoal(Goal g, double likelihood) {
         GoalStatus status = new GoalStatus();
         status.goal = g;
         status.likelihood = likelihood;
@@ -173,7 +173,7 @@ public class EmotionAppraisalSystem {
      * Update this Transition System state, upon receiving an event e. Also specify
      * when the new time now.
      */
-    public void update(Event e, int newtime) {
+    public void update(Event e, long newtime) {
 
         if (newtime < currentTime)
             throw new IllegalArgumentException();
