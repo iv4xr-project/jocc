@@ -15,7 +15,11 @@ import java.util.function.Function;
 public class Goal {
 
     public String name;
-    public int significance;
+    
+    /**
+     * Should be a number in [0..1]
+     */
+    public double significance;
     public Goal() {
     }
 
@@ -23,11 +27,18 @@ public class Goal {
         this.name = name;
     }
 
-    public Goal(String name, int significane) {
+    /**
+     * Create a new goal wtith the given name and significance. The latter should be a number
+     * in [0..1]
+     */
+    public Goal(String name, double significane) {
         this.name = name;
         this.significance = significane;
     }
 
+    /**
+     * Should be a number in [0..1]. An important goal can get significance 1.
+     */
     public Goal withSignificance(int significance) {
         this.significance = significance;
         return this;

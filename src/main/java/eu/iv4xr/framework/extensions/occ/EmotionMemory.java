@@ -6,7 +6,7 @@ public class EmotionMemory {
 
     List<Emotion> memory = new LinkedList<>();
 
-    public static int memoryHorizon = 1000;
+    public int memoryHorizon = 1000;    
 
     /**
      * Add this emotion e to the memory.
@@ -20,7 +20,7 @@ public class EmotionMemory {
      * Remove memories which are too old.
      */
     public void cleanup(int currentTime) {
-        int oldestAllowed = Math.max(0, currentTime - 1000);
+        int oldestAllowed = Math.max(0, currentTime - memoryHorizon);
         memory.removeIf(e -> e.t0 < oldestAllowed);
     }
 

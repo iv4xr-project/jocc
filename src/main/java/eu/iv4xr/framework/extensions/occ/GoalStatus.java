@@ -8,16 +8,14 @@ public class GoalStatus implements Cloneable {
     public Goal goal;
 
     /**
-     * Maximum value for likelihood. Set at 100.
+     * Maximum value for likelihood, which is 1.
      */
-    public static int maxLikelihood = 100;
+    public static double maxLikelihood = 1 ;
 
     /**
-     * The goal likelihood. We will represent this as as an integer in the range of
-     * 0..100, with 0 means that the goal is believed, with certainty, not to
-     * happen; 100 is the opposite.
+     * The goal likelihood, a number in [0..1]
      */
-    public int likelihood;
+    public double likelihood;
 
     public boolean isAchieved = false;
     public boolean isFailed = false;
@@ -35,7 +33,7 @@ public class GoalStatus implements Cloneable {
     public void setAsAchieved() {
         isAchieved = true;
         isFailed = false;
-        likelihood = 100;
+        likelihood = 1 ;
     }
 
     @Override

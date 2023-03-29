@@ -14,8 +14,14 @@ import eu.iv4xr.framework.extensions.occ.Emotion.EmotionType;
 
 public class EmotionRelatedFunctions {
 
-    public static int EmotionFunction(UserCharacterization userModel, EmotionType ety, Goals_Status goalsStatusBefore,
-            Goals_Status goalsStatusAfter, Event e, String targetName, Set<Emotion> emotionset, EmotionMemory ememory) {
+    public static double EmotionFunction(UserCharacterization userModel, 
+    		EmotionType ety, 
+    		Goals_Status goalsStatusBefore,
+            Goals_Status goalsStatusAfter, 
+            Event e, 
+            String targetName, 
+            Set<Emotion> emotionset, 
+            EmotionMemory ememory) {
         // in our case, all emotions so far are towards a goal. So, the target is always
         // a goal:
         Goal g = goalsStatusAfter.getGoal(targetName);
@@ -36,7 +42,7 @@ public class EmotionRelatedFunctions {
         throw new IllegalArgumentException(); // should not reach this point
     }
 
-    public static int joy(UserCharacterization userModel, Goals_Status goalsStatusAfter, Event e, Goal g) {
+    public static double joy(UserCharacterization userModel, Goals_Status goalsStatusAfter, Event e, Goal g) {
         if (userModel.desirabilityAppraisalRule(goalsStatusAfter, e.name, g.name) > 0
                 && goalsStatusAfter.goalStatus(g.name).likelihood == GoalStatus.maxLikelihood)
 
@@ -46,7 +52,7 @@ public class EmotionRelatedFunctions {
             return 0;
     }
 
-    public static int distress(UserCharacterization userModel, Goals_Status goalsStatusAfter, Event e, Goal g) {
+    public static double distress(UserCharacterization userModel, Goals_Status goalsStatusAfter, Event e, Goal g) {
         if (userModel.desirabilityAppraisalRule(goalsStatusAfter, e.name, g.name) < 0
                 // this is from C#, seems to be a mistake. Should be 0:
                 // && goalsStatusAfter.goalStatus(g.name).likelihood ==
@@ -59,14 +65,19 @@ public class EmotionRelatedFunctions {
             return 0;
     }
 
-    public static int hope(UserCharacterization userModel, Goals_Status goalsStatusBefore,
+    public static double hope(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g) {
         var p_before = goalsStatusBefore.goalStatus(g.name).likelihood;
         var gStatusAfter = goalsStatusAfter.goalStatus(g.name);
         var p_after = gStatusAfter.likelihood;
         // System.out.println("%%%%% checking HOPE, pold=" + p_before + ", pnew=" +
         // p_after) ;
-        if (p_after > p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved&& p_after!=1) {
+        if (p_after > p_before 
+        		&& p_after < GoalStatus.maxLikelihood 
+        		&& !gStatusAfter.isAchieved 
+        		// WP: commenting this out, looks like a mistake, and not needed:
+        		// && p_after!=1
+        	) {
 
             var isy = intensity(userModel, EmotionType.Hope, goalsStatusAfter, null, g.name);
             // System.out.println("%%%%% checking HOPE " + isy) ;
@@ -77,12 +88,18 @@ public class EmotionRelatedFunctions {
             return 0;
     }
 
-    public static int fear(UserCharacterization userModel, Goals_Status goalsStatusBefore,
+    public static double fear(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g) {
         var p_before = goalsStatusBefore.goalStatus(g.name).likelihood;
         var gStatusAfter = goalsStatusAfter.goalStatus(g.name);
         var p_after = gStatusAfter.likelihood;
-        if (p_after < p_before && p_after < GoalStatus.maxLikelihood && !gStatusAfter.isAchieved &&p_after!=0)
+        if (p_after < p_before 
+        		&& p_after < GoalStatus.maxLikelihood 
+        		// WP: this looks like a mistake, should be !fail, and then the condition != 0
+        		// is not needed. Commenting out, replacing:
+        		//&& !gStatusAfter.isAchieved && p_after!=0
+        		&& ! gStatusAfter.isFailed
+        		)
 
             return intensity(userModel, EmotionType.Fear, goalsStatusAfter, null, g.name);
 
@@ -90,7 +107,7 @@ public class EmotionRelatedFunctions {
             return 0;
     }
 
-    public static int satisfaction(UserCharacterization userModel, Goals_Status goalsStatusBefore,
+    public static double satisfaction(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g, Set<Emotion> emotionset, EmotionMemory ememory) {
         // according to Fatima math
         /*
@@ -102,7 +119,8 @@ public class EmotionRelatedFunctions {
          */
 
         if (emotionset.stream().anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Joy)
-                && ememory.contains(EmotionType.Hope, g.name) && goalsStatusAfter.goalStatus(g.name).isAchieved)
+                && ememory.contains(EmotionType.Hope, g.name) 
+                && goalsStatusAfter.goalStatus(g.name).isAchieved)
 
             return intensity(userModel, EmotionType.Satisfaction, goalsStatusAfter, null, g.name);
 
@@ -110,7 +128,7 @@ public class EmotionRelatedFunctions {
             return 0;
     }
 
-    public static int disappointment(UserCharacterization userModel, Goals_Status goalsStatusBefore,
+    public static double disappointment(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g, Set<Emotion> emotionset, EmotionMemory ememory) {
         // according to original math (Fatima)
         /*
@@ -122,7 +140,8 @@ public class EmotionRelatedFunctions {
 
         if (emotionset.stream()
                 .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
-                && ememory.contains(EmotionType.Hope, g.name) && goalsStatusAfter.goalStatus(g.name).isFailed)    
+                && ememory.contains(EmotionType.Hope, g.name) 
+                && goalsStatusAfter.goalStatus(g.name).isFailed)    
             return intensity(userModel, EmotionType.Disappointment, goalsStatusAfter, null, g.name);        
         else
         	return 0;
@@ -134,7 +153,7 @@ public class EmotionRelatedFunctions {
      * towards a given target, when this emotion is triggered for the first time.
      * The trigger is an event.
      */
-    public static int intensity(UserCharacterization userModel, EmotionType ety, Goals_Status goalsStatus, Event e,
+    public static double intensity(UserCharacterization userModel, EmotionType ety, Goals_Status goalsStatus, Event e,
             String targetName) {
         return potential(userModel, ety, goalsStatus, e, targetName) - userModel.intensityThresholdRule(ety);
     }
@@ -144,7 +163,7 @@ public class EmotionRelatedFunctions {
      * towards a given goal, when it is triggered by an event. This is used inside
      * the intensity-function.
      */
-    public static int potential(UserCharacterization userModel, EmotionType ety, Goals_Status goalsStatus, Event e,
+    public static double potential(UserCharacterization userModel, EmotionType ety, Goals_Status goalsStatus, Event e,
             String targetName) {
         Goal g;
         switch (ety) {
@@ -162,15 +181,16 @@ public class EmotionRelatedFunctions {
             g = goalsStatus.getGoal(targetName);
             // return goalsStatus.goalStatus(targetName).likelihood * g.significance;
             // likelihood would then be 1
-            // return g.significance;
-            // HAck:
-            return 100 * g.significance;
+            return g.significance;
+            // HAck: --> disabled, as likelihood is now normalized to max 1
+            // return 100 * g.significance;
         case Disappointment:
             g = goalsStatus.getGoal(targetName);
             // return (GoalStatus.maxLikelihood -
             // goalsStatus.goalStatus(targetName).likelihood) * g.significance; likelihood
             // would be 0
-            return 100 *g.significance;
+            //return 100 *g.significance;
+            return g.significance;     
         }
         throw new IllegalArgumentException(); // should not reach this point
     }
@@ -178,24 +198,18 @@ public class EmotionRelatedFunctions {
     /**
      * The ifun_time function.
      */
-    public static int decayedIntesity(UserCharacterization userModel, EmotionType ety, int initialIntensity, int t0,
-            int newtime) {
-
-    	
-        assert newtime >= t0;
+    public static double decayedIntesity(UserCharacterization userModel, EmotionType ety, 
+    		double initialIntensity, 
+    		long t0,
+            long newtime) {
+	
+    	if (newtime < t0) throw new IllegalArgumentException("New time is less that time-0") ;
         if (newtime == t0)
             return initialIntensity;
         // emotion dependent decay-factor (determines how fast the decay)
         double decayfactor = userModel.emotionIntensityDecayRule(ety);
         double c = -0.0025;
-        double w0 = (double) initialIntensity;
-        // I believe the linear function works good enough and we dont need exp function
-        // until there is a valid reason
-        return (int) Math.round(w0 * Math.exp(c * decayfactor * (newtime - t0)));
-        // WP: but below is not a linear function.. in fact it will decay very fast
-        // return (int) (w0 / (decayfactor * (newtime - t0)));
-        // this is linear:
-        // return (int) w0 - (int)(decayfactor * (double) (newtime - t0));
+        return initialIntensity * Math.exp(c * decayfactor * (newtime - t0));
 
     }
 

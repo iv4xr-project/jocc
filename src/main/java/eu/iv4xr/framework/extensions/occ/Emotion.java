@@ -64,20 +64,20 @@ public class Emotion {
     /**
      * Representing the time when the emotion is triggered.
      */
-    public int t0;
+    public long t0;
 
     /**
      * A number in the range of 0..100 representing this emotion's current
      * intensity.
      */
-    public int intensity;
+    public double intensity;
 
     /**
      * The initial intensity of this emotion when it first triggered at time t0.
      */
-    public int intensity0;
+    public double intensity0;
 
-    public Emotion(EmotionType ety, Goal g, int timeWhenTrigerred, int initialIntensity) {
+    public Emotion(EmotionType ety, Goal g, long timeWhenTrigerred, double initialIntensity) {
         this.etype = ety;
         this.g = g;
         this.t0 = timeWhenTrigerred;

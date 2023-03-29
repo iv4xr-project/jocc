@@ -34,7 +34,7 @@ public class EmotionAppraisalSystem {
     // time when it emerges and its initial intensity; its w would be its current
     // intensity.
     public EmotionMemory ememory = new EmotionMemory();
-
+    
     public int currentTime = 0;
 
     // private bool found = false;
@@ -52,6 +52,16 @@ public class EmotionAppraisalSystem {
         this.beliefbase = bbs;
         return this;
     }
+    
+    /**
+     * Set how long moments of stimulated emotions will stay in the memory. The number k is 
+     * expressed in terms of how many emotion-stimulations will be kept in memory (so, it 
+     * is NOT expressed in seconds!). The default is 1000. 
+     */
+    public EmotionAppraisalSystem setEmotionMemoryHorizon(int k) {
+    	ememory.memoryHorizon = k ;
+    	return this ;
+    }
 
     public EmotionAppraisalSystem addGoal(Goal g, int likelihood) {
         GoalStatus status = new GoalStatus();
@@ -60,6 +70,15 @@ public class EmotionAppraisalSystem {
         beliefbase.getGoalsStatus().statuses.put(g.name, status);
         return this;
     }
+    
+    /**
+     * Remove a goal from the system, e.g. if it no longer matters, or achieveable .
+     */
+    public EmotionAppraisalSystem removeGoal(Goal g) {
+    	beliefbase.getGoalsStatus().statuses.remove(g.name) ;
+    	return this ;
+    }
+    		
 
     public Emotion getEmotion(String goalName, Emotion.EmotionType ety) {
         for (Emotion e : emo) {
@@ -90,7 +109,7 @@ public class EmotionAppraisalSystem {
                     // if
                     // the new likelihood of the cause-goal (if it changes at all) would influence
                     // the agent's belief on the likelihood of the consequence-goal:
-                    Integer newLikelihood = userModel.goalTowardsGoalRule.apply(beliefbase).apply(cause.goal.name)
+                    Double newLikelihood = userModel.goalTowardsGoalRule.apply(beliefbase).apply(cause.goal.name)
                             .apply(consequent.goal.name);
 
                     if (newLikelihood != null) {
@@ -108,15 +127,18 @@ public class EmotionAppraisalSystem {
      * discarded. Be careful... this method directly change the emotions maintained
      * by this Transition Syatem.
      */
-    private void applyTimeDecayToEmotions(int newtime) {
+    private void applyTimeDecayToEmotions(long newtime) {
         for (Emotion e : emo) {
-            // use the decay-intensity-function to obtain the new intensity:
-        	if(e.etype==EmotionType.Fear &&newtime>=120&e.g.name=="quest is completed")
+        	// Debug print? -->
+        	if(e.etype==EmotionType.Fear && newtime>=120 && e.g.name=="quest is completed")
         	{
         		System.out.print("last intensity:"+ e.intensity);
         	} 
-            e.intensity = decayedIntesity(userModel, e.etype, e.intensity0, e.t0, newtime);
-            if(e.etype==EmotionType.Fear &&newtime>=120&e.g.name=="quest is completed")
+
+        	// use the decay-intensity-function to obtain the new intensity:
+        	e.intensity = decayedIntesity(userModel, e.etype, e.intensity0, e.t0, newtime);
+            
+            if(e.etype==EmotionType.Fear && newtime>=120 && e.g.name=="quest is completed")
         	{
         		System.out.print("new intensity:"+ e.intensity);
         	} 
@@ -131,12 +153,14 @@ public class EmotionAppraisalSystem {
      * also means that the agent must have some hope of achieving it, however small
      * this hope could be. And similarly, it would have some fear as well, that the
      * goal might fail.
+     * 
+     * TODO: this will crash, as the code pass a null-event.
      */
     public void addInitialEmotions() {
         // adding initial prospect-based emotions, if configured to do so:
         Goals_Status goals = beliefbase.getGoalsStatus();
         for (GoalStatus gstat : goals.statuses.values()) {
-            int initialIntensity = intensity(userModel, EmotionType.Hope, goals, null, gstat.goal.name);
+            double initialIntensity = intensity(userModel, EmotionType.Hope, goals, null, gstat.goal.name);
             Emotion initialHope = new Emotion(EmotionType.Hope, gstat.goal, currentTime, initialIntensity);
             initialIntensity = intensity(userModel, EmotionType.Fear, goals, null, gstat.goal.name);
             Emotion initialFear = new Emotion(EmotionType.Fear, gstat.goal, currentTime, initialIntensity);
@@ -177,7 +201,7 @@ public class EmotionAppraisalSystem {
             for (var etype : Emotion.emotionTypes) {
 
                 // calculate the intensity:
-                int w = EmotionFunction(userModel, etype, goalsStatusBeforeUpdate, goalsCurrentStatus, e, g.name, emo,
+                double w = EmotionFunction(userModel, etype, goalsStatusBeforeUpdate, goalsCurrentStatus, e, g.name, emo,
                         ememory);
                 // add the emotion only if the intestity >0 :
                 if (w > 0) {
@@ -242,6 +266,7 @@ public class EmotionAppraisalSystem {
                 emotion.t0=emoOld.t0;
 
             }
+            // debug print:
             if(emotion.etype==EmotionType.Fear &&emotion.intensity==emoOld.intensity&&emotion.g.name=="quest is completed")
         	{
         		System.out.print("Old entinisty was higher!!!!!: "+ emotion.intensity);
