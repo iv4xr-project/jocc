@@ -33,7 +33,7 @@ public class GoalStatus implements Cloneable {
     public void setAsAchieved() {
         isAchieved = true;
         isFailed = false;
-        likelihood = 1 ;
+        likelihood = maxLikelihood ;
     }
 
     @Override
