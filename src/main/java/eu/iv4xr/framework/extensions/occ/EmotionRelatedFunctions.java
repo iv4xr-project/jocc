@@ -64,10 +64,11 @@ public class EmotionRelatedFunctions {
         else
             return 0;
     }
-
+    
     public static double hope(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g) {
-        var p_before = goalsStatusBefore.goalStatus(g.name).likelihood;
+    	var status_before = goalsStatusBefore.goalStatus(g.name) ;
+        var p_before = status_before == null ? 0 : status_before.likelihood;
         var gStatusAfter = goalsStatusAfter.goalStatus(g.name);
         var p_after = gStatusAfter.likelihood;
         // System.out.println("%%%%% checking HOPE, pold=" + p_before + ", pnew=" +
@@ -90,7 +91,8 @@ public class EmotionRelatedFunctions {
 
     public static double fear(UserCharacterization userModel, Goals_Status goalsStatusBefore,
             Goals_Status goalsStatusAfter, Goal g) {
-        var p_before = goalsStatusBefore.goalStatus(g.name).likelihood;
+    	var status_before = goalsStatusBefore.goalStatus(g.name) ;
+        var p_before = status_before == null ? 0 : status_before.likelihood;
         var gStatusAfter = goalsStatusAfter.goalStatus(g.name);
         var p_after = gStatusAfter.likelihood;
         if (p_after < p_before 
@@ -117,13 +119,19 @@ public class EmotionRelatedFunctions {
          * GoalStatus.maxLikelihood)) return intensity(EmotionType.Satisfaction, appr,
          * threshold, newBelief, null, g.name);
          */
+    	//System.out.print("####") ;
+    	//for (var e : emotionset){
+    	//	System.out.print("| " + e.etype + "-->" + e.g.name) ;
+    	//}
+    	//System.out.println("") ;
 
-        if (emotionset.stream().anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Joy)
-                && ememory.contains(EmotionType.Hope, g.name) 
-                && goalsStatusAfter.goalStatus(g.name).isAchieved)
-
-            return intensity(userModel, EmotionType.Satisfaction, goalsStatusAfter, null, g.name);
-
+        if ( //	emotionset.stream().anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Joy)
+             // && ememory.contains(EmotionType.Hope, g.name) 
+             ememory.contains(EmotionType.Joy, g.name) 
+             && goalsStatusAfter.goalStatus(g.name).isAchieved) {
+        	return intensity(userModel, EmotionType.Satisfaction, goalsStatusAfter, null, g.name);
+        	
+        }
         else
             return 0;
     }
@@ -138,9 +146,10 @@ public class EmotionRelatedFunctions {
          * newBelief, null, g.name);
          */
 
-        if (emotionset.stream()
-                .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
-                && ememory.contains(EmotionType.Hope, g.name) 
+        if (//emotionset.stream()
+            //    .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
+            //    && ememory.contains(EmotionType.Hope, g.name) 
+        		ememory.contains(EmotionType.Fear, g.name) 
                 && goalsStatusAfter.goalStatus(g.name).isFailed)    
             return intensity(userModel, EmotionType.Disappointment, goalsStatusAfter, null, g.name);        
         else
