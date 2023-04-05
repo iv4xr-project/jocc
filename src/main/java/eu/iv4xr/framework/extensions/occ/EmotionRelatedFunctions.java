@@ -125,10 +125,13 @@ public class EmotionRelatedFunctions {
     	//}
     	//System.out.println("") ;
 
-        if ( //	emotionset.stream().anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Joy)
+        if ( // Original Saba's logic:
+        		//	emotionset.stream().anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Joy)
              // && ememory.contains(EmotionType.Hope, g.name) 
-             ememory.contains(EmotionType.Joy, g.name) 
-             && goalsStatusAfter.goalStatus(g.name).isAchieved) {
+        	 // new logic:	
+            ememory.contains(EmotionType.Joy, g.name) 
+            && ememory.contains(EmotionType.Hope, g.name) 
+            && goalsStatusAfter.goalStatus(g.name).isAchieved) {
         	return intensity(userModel, EmotionType.Satisfaction, goalsStatusAfter, null, g.name);
         	
         }
@@ -146,10 +149,13 @@ public class EmotionRelatedFunctions {
          * newBelief, null, g.name);
          */
 
-        if (//emotionset.stream()
-            //    .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
-            //    && ememory.contains(EmotionType.Hope, g.name) 
-        		ememory.contains(EmotionType.Fear, g.name) 
+        if (// Saba's original logic:
+        	//emotionset.stream()
+             //   .anyMatch(emotion -> emotion.g.name.equals(g.name) && emotion.etype == EmotionType.Distress)
+              //  && ememory.contains(EmotionType.Hope, g.name)) 
+        	// WP's alternate logic:
+        		ememory.contains(EmotionType.Distress, g.name) 
+        		&& ememory.contains(EmotionType.Hope, g.name) 
                 && goalsStatusAfter.goalStatus(g.name).isFailed)    
             return intensity(userModel, EmotionType.Disappointment, goalsStatusAfter, null, g.name);        
         else

@@ -145,6 +145,14 @@ public class EmotionAppraisalSystem {
         }
         // remove those whose intensity drops to 0:
     }
+    
+    /**
+     * As {@link #addInitialEmotions(boolean)}, but will always add initial
+     * fear.
+     */
+    public void addInitialEmotions() {
+    	addInitialEmotions(false) ;
+    }
 
     /**
      * This will configure the emotion-state to contain initial-emotions towards
@@ -154,21 +162,27 @@ public class EmotionAppraisalSystem {
      * this hope could be. And similarly, it would have some fear as well, that the
      * goal might fail.
      * 
-     * TODO: this will crash, as the code pass a null-event.
+     * <p> If the flag withFear is true, the initial-fear is added, otherwise not.
+     * 
+     * TODO: this will crash, as the code pass a null-event. --> Update; should be
+     * solved now as hope and fear do not actually inspect the triggering
+     * event. So, null is ok.
      */
-    public void addInitialEmotions() {
+    public void addInitialEmotions(boolean withFear) {
         // adding initial prospect-based emotions, if configured to do so:
         Goals_Status goals = beliefbase.getGoalsStatus();
         for (GoalStatus gstat : goals.statuses.values()) {
             double initialIntensity = intensity(userModel, EmotionType.Hope, goals, null, gstat.goal.name);
             Emotion initialHope = new Emotion(EmotionType.Hope, gstat.goal, currentTime, initialIntensity);
-            initialIntensity = intensity(userModel, EmotionType.Fear, goals, null, gstat.goal.name);
-            Emotion initialFear = new Emotion(EmotionType.Fear, gstat.goal, currentTime, initialIntensity);
             emo.add(initialHope);
-            emo.add(initialFear);
+            if (withFear) {
+            	initialIntensity = intensity(userModel, EmotionType.Fear, goals, null, gstat.goal.name);
+                Emotion initialFear = new Emotion(EmotionType.Fear, gstat.goal, currentTime, initialIntensity);
+                emo.add(initialFear);
+            }
         }
     }
-
+    
     /**
      * Update this Transition System state, upon receiving an event e. Also specify
      * when the new time now.

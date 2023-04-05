@@ -6,7 +6,7 @@ public class EmotionMemory {
 
     List<Emotion> memory = new LinkedList<>();
 
-    public long memoryHorizon = 1000;    
+    public long memoryHorizon = 50;    
 
     /**
      * Add this emotion e to the memory.
