@@ -27,6 +27,8 @@ public class EmotionAppraisalSystem {
     public BeliefBase beliefbase;
     public Set<Emotion> emo = new HashSet<>();
     
+    public boolean turnOnDebugPrinting = false ;
+    
     public HashSet<Emotion> newEmotions;
 
     // memory ... emotion e will be added when it emerges. Its t0 and w0 already
@@ -307,17 +309,18 @@ public class EmotionAppraisalSystem {
         for (var dropThis : toBeRemoved) {
             beliefbase.getGoalsStatus().statuses.remove(dropThis.goal.name);
         }
-
-        System.out.println("** Update: " + e.name + ",time=" + currentTime);
-        System.out.println("** Goals:");
-        System.out.println(beliefbase.getGoalsStatus().toString());
-        System.out.println(("** Emotion state:"));
-        int k = 0;
-        for (Emotion emotion : emo) {
-            if (k > 0)
-                System.out.println("");
-            System.out.println("   " + emotion);
- 
+        
+        if (turnOnDebugPrinting) {
+        	System.out.println("** Update: " + e.name + ",time=" + currentTime);
+            System.out.println("** Goals:");
+            System.out.println(beliefbase.getGoalsStatus().toString());
+            System.out.println(("** Emotion state:"));
+            int k = 0;
+            for (Emotion emotion : emo) {
+                if (k > 0)
+                    System.out.println("");
+                System.out.println("   " + emotion);
+            }
         }
     }
 
